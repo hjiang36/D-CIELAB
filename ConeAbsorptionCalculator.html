@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Cone Absorption Calculator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Bootstrap -->
+<link href="dist/css/prettify_bootstrap.css" rel="stylesheet">
+<link href="dist/css/docs.min.css" rel="stylesheet">
+<link href="dist/css/bootstrap.css" rel="stylesheet">
+<script src="http://code.jquery.com/jquery.js"></script>
+<script type="text/javascript" src="dist/js/bootstrap.js"></script>
+<script type="text/javascript" src="dist/js/bootstrapValidator.js"></script>
+</head>
+<body>
+<div class="container bs-docs-container">
+  <div class=" bs-docs-section">
+    <h1 id="coneAbsorption" class="page-header"> Cone Absorption Calculator </h1>
+    <div class=" alert alert-warning alert-dismissable">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <strong>Warning!</strong> This site is still under development </div>
+    <form class="form-horizontal" role="form" id="cone-form">
+      <fieldset>
+        <!-- Define Scene Parameters -->
+        <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#scenePanel"> Scene Create </a></h4>
+          </div>
+          <div class="panel-collapse collapse in" id="scenePanel">
+            <div class="panel-body"> 
+              <!-- Display Selection -->
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="displayCreate">Display</label>
+                <div class="col-sm-2">
+                  <select id="displayCreate" class="form-control">
+                    <option>LCD-Apple</option>
+                    <option>OLED-Sony</option>
+                    <option>CRT-NEC</option>
+                    <option>CRT-Dell</option>
+                  </select>
+                </div>
+              </div>
+              
+              <!-- Viewing Distance -->
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="viewingDist">Viewing Distance</label>
+                <div class="col-sm-2">
+                  <input type="number" 
+                	   class="form-control" 
+                       id="viewingDist"
+                       name="viewingDist" 
+                       placeholder="meters"
+                       min="0.1" 
+                       step="any"
+                       required
+                       data-validation-required-message="Please fill out this field"
+                       aria-invalid="true">
+                </div>
+              </div>
+              
+              <!-- Image content -->
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="fileInput">Image content</label>
+                <div class="col-sm-2">
+                  <input class="form-control input-file" id="fileInput" type="file">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Define Human Optics Parameters -->
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#opticsPanel"> Human Optics </a></h4>
+          </div>
+          <div class="panel-collapse collapse" id="opticsPanel">
+            <div class="panel-body">
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="Age">Age</label>
+                <div class="col-sm-1">
+                  <input type="number" 
+                       class="form-control input-small"
+                       min="10"
+                       max="100" 
+                       id="Age"
+                       name="Age"
+                       required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="LensDensity">Lens Density</label>
+                <div class="col-sm-1">
+                  <input type="number" 
+                       class="form-control input-small"
+                       min="0"
+                       step="any"
+                       max="10" 
+                       id="LensDensity"
+                       name="LensDensity"
+                       required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="Astigmatism">Astigmatism</label>
+                <div class="col-sm-1">
+                  <input type="number" 
+                       class="form-control input-small"
+                       min="0"
+                       max="10"
+                       step="any" 
+                       id="Astigmatism"
+                       required>
+                </div>
+                <label for="Defocus" class="col-sm-1">Defocus</label>
+                <div class="col-sm-1">
+                  <input type="number" 
+                       class="form-control input-small"
+                       min="0"
+                       max="10"
+                       step="any" 
+                       id="Defocus"
+                       name="Defocus"
+                       required>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Sensor (Cone) Parameters -->
+        <div class="panel panel-default">
+          <div class="panel-heading">
+          <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#sensorPanel"> Cones </a></h4>
+          </div>
+          <div class="panel-collapse collapse" id="sensorPanel">
+            <div class="panel-body"> 
+              
+              <!-- Macular pigment density -->
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="MacularDensity">Macular Density</label>
+                <div class="col-sm-1">
+                  <input type="number" 
+                       class="form-control input-small"
+                       min="0"
+                       max="10"
+                       step="any" 
+                       id="MacularDensity"
+                       name="MacularDensity"
+                       required>
+                </div>
+              </div>
+              
+              <!-- Cone Spatial Density -->
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="ConeSpatialDensityL">Cone Spatial Density</label>
+                <div class="col-xs-1">
+                  <input type="number" min="0" max="1" step="any" class="input-small form-control" id="ConeSpatialDensityL" placeholder="L">
+                </div>
+                <div class="col-xs-1">
+                  <input type="number" min="0" max="1" step="any" class="input-small form-control" id="ConeSpatialDensityM" placeholder="M">
+                </div>
+                <div class="col-xs-1">
+                  <input type="number" min="0" max="1" step="any" class="input-small form-control" id="ConeSpatialDensityS" placeholder="S">
+                </div>
+              </div>
+              
+              <!-- Cone Pigment Density -->
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="ConePigmentDensity">Cone Pigment Density</label>
+                <div class="col-sm-1">
+                  <input type="number" 
+                       class="input-small form-control"
+                       min="0"
+                       max="10"
+                       step="any" 
+                       id="ConePigmentDensity"
+                       required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="noiseFreeCheckBox"></label>
+                <div class="col-sm-5">
+                  <label class="checkbox">
+                    <input type="checkbox" id="noiseFreeCheckBox" value="option1">
+                    Compute mean (noise-free) cone absorptions only </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Comments -->
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#otherPanel"> Other </a></h4>
+          </div>
+          <div class="panel-collapse collapse" id="otherPanel">
+            <div class="panel-body">
+              <div class="form-group">
+                <label class="control-label col-lg-2" for="Comments">Comments</label>
+                <div class=" col-lg-5">
+                  <textarea class="input-xlarge form-control" id="Comments" rows="3"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel"></div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Submit</button>
+          <button class="btn">Cancel</button>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+	
+$(document).ready(function() {
+    $('#cone-form').bootstrapValidator({
+        message: 'This value is not valid',
+        fields: {
+            Age: {
+                validators: {
+                    lessThan: {
+                        value: 100,
+                        inclusive: true,
+                        message: 'The ages has to be less than 100'
+                    },
+                    greaterThan: {
+                        value: 10,
+                        inclusive: false,
+                        message: 'The ages has to be greater than or equals to 10'
+                    }
+                }
+            },
+			viewingDist: {
+				validators: {
+                    between: {
+						min: 0.1,
+						max: 10,
+						inclusive: false,
+						message: 'Viewing distance should be between 0.1 and 10 meters'
+					}
+                }
+			},
+			LensDensity: {
+				validators: {
+                    between: {
+						min: 0,
+						max: 10,
+						inclusive: false,
+						message: 'Lens density should be between 0.1 and 10 meters'
+					}
+                }
+			},
+			Defocus: {
+				validators: {
+                    between: {
+						min: 0,
+						max: 10,
+						inclusive: false,
+						message: 'Lens density should be between 0.1 and 10 meters'
+					}
+                }
+			},
+			MacularDensity: {
+				validators: {
+                    between: {
+						min: 0,
+						max: 10,
+						inclusive: false,
+						message: 'Lens density should be between 0.1 and 10 meters'
+					}
+                }
+			}
+        }
+    });
+});
+	</script>
+</body>
+</html>
