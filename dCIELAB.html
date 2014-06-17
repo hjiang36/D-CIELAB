@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>D-CIELAB Web Tools</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Bootstrap -->
+<link href="bootstrap/css/prettify_bootstrap.css" rel="stylesheet">
+<link href="bootstrap/css/docs.min.css" rel="stylesheet">
+<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+<script src="http://code.jquery.com/jquery.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrapValidator.js"></script>
+</head>
+<body>
+<div class="container bs-docs-container">
+  <div class=" bs-docs-section">
+    <h1 id="coneAbsorption" class="page-header"> D-CIELAB Web Tools </h1>
+    <div class=" alert alert-warning alert-dismissable">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <strong>Warning!</strong> This site is still under development </div>
+    <form class="form-horizontal" role="form" id="color-transform-form">
+      <fieldset>
+        <!-- Brettel Color Transform -->
+        <div class="panel panel-default">
+          <div class="panel-heading">
+          <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#colorTransform"> Equivalent Color Calculator </a></h4>
+          </div>
+          <div class="panel-collapse collapse in" id="colorTransform">
+            <div class="panel-body">
+              <!-- Color Space Selection -->
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="colorSpace">Color Space</label>
+                <div class="col-sm-2">
+                  <select id="colorSpace" class="form-control">
+                  	<option>adobe RGB</option>
+                    <option>sRGB</option>
+                    <option>XYZ </option>
+                    <option>LMS </option>
+                  </select>
+                </div>
+              </div>
+              
+              <!-- Original Color -->
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="Original-Color-1">Original Color</label>
+                <div class="col-xs-1">
+                  <input type="number" min="0" max="2048" step="any" class="input-small form-control" id="Original-Color-1" placeholder="R">
+                </div>
+                <div class="col-xs-1">
+                  <input type="number" min="0" max="2048" step="any" class="input-small form-control" id="Original-Color-2" placeholder="G">
+                </div>
+                <div class="col-xs-1">
+                  <input type="number" min="0" max="2048" step="any" class="input-small form-control" id="Original-Color-3" placeholder="B">
+                </div>
+              </div>
+              
+              <!-- Colorblind Type Selection -->
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="cbType">Colorblind Type</label>
+                <div class="col-sm-2">
+                  <select id="cbType" class="form-control">
+                  	<option>Trichromat</option>
+                    <option>Protanopia</option>
+                    <option>Deutanopia </option>
+                    <option>Tritanopia </option>
+                  </select>
+                </div>
+              </div>
+              
+              <!-- Macular pigment density -->
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="MacularDensity">Macular Density</label>
+                <div class="col-sm-1">
+                  <input type="number" 
+                       class="form-control input-small"
+                       min="0"
+                       max="10"
+                       step="any" 
+                       id="MacularDensity"
+                       name="MacularDensity"
+                       required>
+                </div>
+              </div>
+              
+              <!-- Cone Pigment Density -->
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="ConePigmentDensity">Cone Pigment Density</label>
+                <div class="col-sm-1">
+                  <input type="number" 
+                       class="input-small form-control"
+                       min="0"
+                       max="10"
+                       step="any" 
+                       id="ConePigmentDensity"
+                       required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="noiseFreeCheckBox"></label>
+                <div class="col-sm-5">
+                  <label class="checkbox">
+                    <input type="checkbox" id="noiseFreeCheckBox" value="option1">
+                    Compute mean (noise-free) cone absorptions only </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="panel"></div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Submit</button>
+          <button class="btn">Cancel</button>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+	
+$(document).ready(function() {
+    $('#color-transform-form').bootstrapValidator({
+        message: 'This value is not valid',
+        fields: {
+            Age: {
+                validators: {
+                    lessThan: {
+                        value: 100,
+                        inclusive: true,
+                        message: 'The ages has to be less than 100'
+                    },
+                    greaterThan: {
+                        value: 10,
+                        inclusive: false,
+                        message: 'The ages has to be greater than or equals to 10'
+                    }
+                }
+            },
+			viewingDist: {
+				validators: {
+                    between: {
+						min: 0.1,
+						max: 10,
+						inclusive: false,
+						message: 'Viewing distance should be between 0.1 and 10 meters'
+					}
+                }
+			},
+			LensDensity: {
+				validators: {
+                    between: {
+						min: 0,
+						max: 10,
+						inclusive: false,
+						message: 'Lens density should be between 0.1 and 10 meters'
+					}
+                }
+			},
+			Defocus: {
+				validators: {
+                    between: {
+						min: 0,
+						max: 10,
+						inclusive: false,
+						message: 'Lens density should be between 0.1 and 10 meters'
+					}
+                }
+			},
+			MacularDensity: {
+				validators: {
+                    between: {
+						min: 0,
+						max: 10,
+						inclusive: false,
+						message: 'Lens density should be between 0.1 and 10 meters'
+					}
+                }
+			}
+        }
+    });
+});
+	</script>
+</body>
+</html>
