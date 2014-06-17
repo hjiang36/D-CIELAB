@@ -10,6 +10,7 @@
 <script src="http://code.jquery.com/jquery.js"></script>
 <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
 <script type="text/javascript" src="bootstrap/js/bootstrapValidator.js"></script>
+<script type="text/javascript" src="javascripts/colorspaces.js"></script>
 </head>
 <body>
 <div class="container bs-docs-container">
@@ -18,6 +19,10 @@
     <div class=" alert alert-warning alert-dismissable">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
       <strong>Warning!</strong> This site is still under development </div>
+    <div class=" bs-callout bs-callout-danger">
+      <h4> Test Information </h4>
+      <p>  This is the test information </p>
+    </div>
     <form class="form-horizontal" role="form" id="color-transform-form">
       <fieldset>
         <!-- Brettel Color Transform -->
@@ -32,10 +37,10 @@
                 <label class="col-sm-2 control-label" for="colorSpace">Color Space</label>
                 <div class="col-sm-2">
                   <select id="colorSpace" class="form-control">
-                  	<option>adobe RGB</option>
-                    <option>sRGB</option>
-                    <option>XYZ </option>
-                    <option>LMS </option>
+                  	<option>sRGB</option>
+                  	<option>XYZ </option>
+			<option>xyY </option>
+                  	<option>LMS </option>
                   </select>
                 </div>
               </div>
@@ -43,13 +48,13 @@
               <!-- Original Color -->
               <div class="form-group">
                 <label class="control-label col-sm-2" for="Original-Color-1">Original Color</label>
-                <div class="col-xs-1">
+                <div class="col-sm-2">
                   <input type="number" min="0" max="2048" step="any" class="input-small form-control" id="Original-Color-1" placeholder="R">
                 </div>
-                <div class="col-xs-1">
+                <div class="col-sm-2">
                   <input type="number" min="0" max="2048" step="any" class="input-small form-control" id="Original-Color-2" placeholder="G">
                 </div>
-                <div class="col-xs-1">
+                <div class="col-sm-2">
                   <input type="number" min="0" max="2048" step="any" class="input-small form-control" id="Original-Color-3" placeholder="B">
                 </div>
               </div>
@@ -60,49 +65,27 @@
                 <div class="col-sm-2">
                   <select id="cbType" class="form-control">
                   	<option>Trichromat</option>
-                    <option>Protanopia</option>
-                    <option>Deutanopia </option>
-                    <option>Tritanopia </option>
+                    	<option selected="selected">Protanopia</option>
+                    	<option>Deutanopia </option>
+                    	<option>Tritanopia </option>
                   </select>
                 </div>
               </div>
-              
-              <!-- Macular pigment density -->
+                            
+              <!-- Transformed Color -->
               <div class="form-group">
-                <label class="control-label col-sm-2" for="MacularDensity">Macular Density</label>
-                <div class="col-sm-1">
-                  <input type="number" 
-                       class="form-control input-small"
-                       min="0"
-                       max="10"
-                       step="any" 
-                       id="MacularDensity"
-                       name="MacularDensity"
-                       required>
+                <label class="control-label col-sm-2" for="Transformed-Color-1">Transformed Color</label>
+                <div class="col-sm-2">
+                  <input type="number" min="0" max="2048" step="any" class="input-small form-control" id="Transformed-Color-1" placeholder="N/A" disabled>
+                </div>
+                <div class="col-sm-2">
+                  <input type="number" min="0" max="2048" step="any" class="input-small form-control" id="Transformed-Color-2" placeholder="N/A" disabled>
+                </div>
+                <div class="col-sm-2">
+                  <input type="number" min="0" max="2048" step="any" class="input-small form-control" id="Transformed-Color-3" placeholder="N/A" disabled>
                 </div>
               </div>
-              
-              <!-- Cone Pigment Density -->
-              <div class="form-group">
-                <label class="control-label col-sm-2" for="ConePigmentDensity">Cone Pigment Density</label>
-                <div class="col-sm-1">
-                  <input type="number" 
-                       class="input-small form-control"
-                       min="0"
-                       max="10"
-                       step="any" 
-                       id="ConePigmentDensity"
-                       required>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-sm-2" for="noiseFreeCheckBox"></label>
-                <div class="col-sm-5">
-                  <label class="checkbox">
-                    <input type="checkbox" id="noiseFreeCheckBox" value="option1">
-                    Compute mean (noise-free) cone absorptions only </label>
-                </div>
-              </div>
+
             </div>
           </div>
         </div>
@@ -119,68 +102,70 @@
 
 
 <script type="text/javascript">
-	
-$(document).ready(function() {
-    $('#color-transform-form').bootstrapValidator({
-        message: 'This value is not valid',
-        fields: {
-            Age: {
-                validators: {
-                    lessThan: {
-                        value: 100,
-                        inclusive: true,
-                        message: 'The ages has to be less than 100'
-                    },
-                    greaterThan: {
-                        value: 10,
-                        inclusive: false,
-                        message: 'The ages has to be greater than or equals to 10'
-                    }
-                }
-            },
-			viewingDist: {
-				validators: {
-                    between: {
-						min: 0.1,
-						max: 10,
-						inclusive: false,
-						message: 'Viewing distance should be between 0.1 and 10 meters'
-					}
-                }
-			},
-			LensDensity: {
-				validators: {
-                    between: {
-						min: 0,
-						max: 10,
-						inclusive: false,
-						message: 'Lens density should be between 0.1 and 10 meters'
-					}
-                }
-			},
-			Defocus: {
-				validators: {
-                    between: {
-						min: 0,
-						max: 10,
-						inclusive: false,
-						message: 'Lens density should be between 0.1 and 10 meters'
-					}
-                }
-			},
-			MacularDensity: {
-				validators: {
-                    between: {
-						min: 0,
-						max: 10,
-						inclusive: false,
-						message: 'Lens density should be between 0.1 and 10 meters'
-					}
-                }
-			}
-        }
-    });
+function clearColorInputs(){
+	$("#Original-Color-1").val("");
+	$("#Original-Color-2").val("");
+	$("#Original-Color-3").val("");
+	$("#Transformed-Color-1").val("");
+	$("#Transformed-Color-2").val("");
+	$("#Transformed-Color-3").val("");
+
+}
+
+function getInputXYZ(){
+	var colorSpace = $("#colorSpace").val();
+	var c1 = $("#Original-Color-1").val();
+	var c2 = $("#Original-Color-2").val();
+	var c3 = $("#Original-Color-3").val();
+	if ($.isNumeric(c1) && $.isNumeric(c2) && $.isNumeric(c3)){
+	  var c = $.colorspaces.make_color("sRGB", [c1, c2, c3]);
+	  return c.as("CIEXYZ");
+	}
+	else{
+	  return [NaN, NaN, NaN];
+	}
+}
+
+$("#colorSpace").change(function (){
+	clearColorInputs();
+	var indx = document.getElementById("colorSpace").selectedIndex;
+	switch (indx){
+	  case 1:
+		$("#Original-Color-1").attr("placeholder", "X");
+		$("#Original-Color-2").attr("placeholder", "Y");
+		$("#Original-Color-3").attr("placeholder", "Z");
+		break;
+	  case 2:
+		$("#Original-Color-1").attr("placeholder", "x");
+		$("#Original-Color-2").attr("placeholder", "y");
+		$("#Original-Color-3").attr("placeholder", "Y");
+		break;
+	  case 3:
+		$("#Original-Color-1").attr("placeholder", "L");
+		$("#Original-Color-2").attr("placeholder", "M");
+		$("#Original-Color-3").attr("placeholder", "S");
+		break;
+	  default:
+		$("#Original-Color-1").attr("placeholder", "R");
+		$("#Original-Color-2").attr("placeholder", "G");
+		$("#Original-Color-3").attr("placeholder", "B");
+		break;
+	}
 });
-	</script>
+
+$("#Original-Color-1, #Original-Color-2, #Original-Color-3").change(function (){
+	var XYZ = getInputXYZ();
+	if (!isNaN(XYZ[0]) && !isNaN(XYZ[1]) && !isNaN(XYZ[2])){
+		$("#Transformed-Color-1").val(XYZ[0]);
+		$("#Transformed-Color-2").val(XYZ[1]);
+		$("#Transformed-Color-3").val(XYZ[2]);	
+	}
+	else{
+		$("#Transformed-Color-1").val("");
+		$("#Transformed-Color-2").val("");
+		$("#Transformed-Color-3").val("");	
+	}
+});
+</script>
 </body>
 </html>
