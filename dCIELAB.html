@@ -4,13 +4,12 @@
 <title>D-CIELAB Web Tools</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Bootstrap -->
-<link href="bootstrap/css/prettify_bootstrap.css" rel="stylesheet">
 <link href="bootstrap/css/docs.min.css" rel="stylesheet">
 <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
 <script src="http://code.jquery.com/jquery.js"></script>
 <script type="text/javascript" src="bootstrap/js/bootstrap.js"></script>
-<script type="text/javascript" src="bootstrap/js/bootstrapValidator.js"></script>
-<script type="text/javascript" src="javascripts/colorspaces.js"></script>
+<script type="text/javascript" src="javascripts/colorTransforms.js"></script>
+<script type="text/javascript" src="javascripts/caman/caman.full.min.js"></script>
 </head>
 <body>
 <div class="container bs-docs-container">
@@ -19,16 +18,21 @@
     <div class=" alert alert-warning alert-dismissable">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
       <strong>Warning!</strong> This site is still under development </div>
-    <div class=" bs-callout bs-callout-danger">
-      <h4> Test Information </h4>
-      <p>  This is the test information </p>
+    <div class=" bs-callout bs-callout-info">
+      <h4> Introduction to D-CIELAB Web Tools </h4>
+      <p>  There are three different tools on this webpage: </p>
+      <ol type="a">
+	<li> Color Transformation Tool - Compute equivalent color for certain type of dichromats with Brettel's algorithm </li>
+	<li> D-CIELAB DeltaE - Compute deltaE distance between two colors in the eye of dichromats </li>
+	<li> Image Transformation Tool - Simulate the image in eyes of dichromatic observers </li>
+      </ol>
     </div>
     <form class="form-horizontal" role="form" id="color-transform-form">
       <fieldset>
         <!-- Brettel Color Transform -->
         <div class="panel panel-default">
           <div class="panel-heading">
-          <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#colorTransform"> Equivalent Color Calculator </a></h4>
+          <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#colorTransform"> Dichromatic Color Transform </a></h4>
           </div>
           <div class="panel-collapse collapse in" id="colorTransform">
             <div class="panel-body">
@@ -76,13 +80,13 @@
               <div class="form-group">
                 <label class="control-label col-sm-2" for="Transformed-Color-1">Transformed Color</label>
                 <div class="col-sm-2">
-                  <input type="number" min="0" max="2048" step="any" class="input-small form-control" id="Transformed-Color-1" placeholder="N/A" disabled>
+                  <input type="number" step="any" class="input-small form-control" id="Transformed-Color-1" placeholder="N/A" disabled>
                 </div>
                 <div class="col-sm-2">
-                  <input type="number" min="0" max="2048" step="any" class="input-small form-control" id="Transformed-Color-2" placeholder="N/A" disabled>
+                  <input type="number" step="any" class="input-small form-control" id="Transformed-Color-2" placeholder="N/A" disabled>
                 </div>
                 <div class="col-sm-2">
-                  <input type="number" min="0" max="2048" step="any" class="input-small form-control" id="Transformed-Color-3" placeholder="N/A" disabled>
+                  <input type="number" step="any" class="input-small form-control" id="Transformed-Color-3" placeholder="N/A" disabled>
                 </div>
               </div>
 
@@ -91,61 +95,277 @@
         </div>
         
         <div class="panel"></div>
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary">Submit</button>
-          <button class="btn">Cancel</button>
-        </div>
       </fieldset>
+
+      <!-- D-CIELAB DeltaE Calculation -->
+      <fieldset>
+	<div class="panel panel-default">
+          <div class="panel-heading">
+          <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#dCIELAB-DeltaE"> D-CIELAB DeltaE Calculator</a></h4>
+          </div>
+          <div class="panel-collapse collapse in" id="dCIELAB-DeltaE">
+            <div class="panel-body">
+              <!-- Color Space Selection -->
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="cSpace">Color Space</label>
+                <div class="col-sm-2">
+                  <select id="cSpace" class="form-control">
+                  	<option>sRGB</option>
+                  	<option>XYZ </option>
+			<option>xyY </option>
+                  	<option>LMS </option>
+                  </select>
+                </div>
+              </div>
+
+	      <!-- Colorblind Type Selection -->
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="d-cbType">Colorblind Type</label>
+                <div class="col-sm-2">
+                  <select id="d-cbType" class="form-control">
+                  	<option>Trichromat</option>
+                    	<option selected="selected">Protanopia</option>
+                    	<option>Deutanopia </option>
+                    	<option>Tritanopia </option>
+                  </select>
+                </div>
+              </div>
+
+              
+              <!-- Color A -->
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="ColorA-1">Color A</label>
+                <div class="col-sm-2">
+                  <input type="number" min="0" max="2048" step="any" class="input-small form-control" id="ColorA-1" placeholder="R">
+                </div>
+                <div class="col-sm-2">
+                  <input type="number" min="0" max="2048" step="any" class="input-small form-control" id="ColorA-2" placeholder="G">
+                </div>
+                <div class="col-sm-2">
+                  <input type="number" min="0" max="2048" step="any" class="input-small form-control" id="ColorA-3" placeholder="B">
+                </div>
+              </div>
+
+	       <!-- Color B -->
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="ColorB-1">Color B</label>
+                <div class="col-sm-2">
+                  <input type="number" min="0" max="2048" step="any" class="input-small form-control" id="ColorB-1" placeholder="R">
+                </div>
+                <div class="col-sm-2">
+                  <input type="number" min="0" max="2048" step="any" class="input-small form-control" id="ColorB-2" placeholder="G">
+                </div>
+                <div class="col-sm-2">
+                  <input type="number" min="0" max="2048" step="any" class="input-small form-control" id="ColorB-3" placeholder="B">
+                </div>
+              </div>
+
+	      <!-- White XYZ -->
+	       <div class="form-group">
+                <label class="control-label col-sm-2" for="ColorW-1">White Point XYZ</label>
+                <div class="col-sm-2">
+                  <input type="number" min="0" max="2048" step="any" class="input-small form-control" id="ColorW-1" placeholder="X">
+                </div>
+                <div class="col-sm-2">
+                  <input type="number" min="0" max="2048" step="any" class="input-small form-control" id="ColorW-2" placeholder="Y">
+                </div>
+                <div class="col-sm-2">
+                  <input type="number" min="0" max="2048" step="any" class="input-small form-control" id="ColorW-3" placeholder="Z">
+                </div>
+              </div>
+
+                            
+              <!-- D-CIELAB DeltaE -->
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="d-DeltaE">D-CIELAB DeltaE</label>
+                <div class="col-sm-2">
+                  <input type="number" class="form-control" id="d-DeltaE" placeholder="N/A" step="any" disabled>
+                </div>
+	      </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="panel"></div>
+
+      </fieldset>
+
+      <fieldset>
+        <!-- Image Transformation -->
+        <div class="panel panel-default">
+          <div class="panel-heading">
+          <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#imageTransform"> Dichromatic Image Transform</a></h4>
+          </div>
+          
+	  <div class="panel-collapse collapse in" id="imageTransform">
+            <div class="panel-body">
+	      
+	      <div class="row">
+	        <div class="col-lg-6">
+    		  <div class="input-group">
+      			<input type="text" class="form-control" placeholder="Image URL" id="imageURL">
+      			<span class="input-group-btn">
+        		<button class="btn btn-default" type="button" id="loadImage">Go!</button>
+      			</span>
+		  </div>
+      	        </div>
+	      </div>
+
+	      <p></p>
+
+	      <div class="row">
+  		<div class="col-xs-6 col-md-3">
+    		  <div class="thumbnail">
+		    <img src="images/300x200.svg" alt="300x200" id="originalImage" style="width: 300px; height: 200px;">
+		    <div class="caption">
+		  	<h4>Original Image</h4>
+        		<p> This is the trichromatic image. For trichromatic observer, this should be the most colorful one among the four.</p>
+		    </div>
+    		  </div>
+  	        </div>        
+  		
+		<div class="col-xs-6 col-md-3">
+    		  <div class="thumbnail">
+      		    <img src="images/300x200.svg" alt="300x200" style="width: 300px; height: 200px;">
+      		    <div class="caption">
+		  	<h4>Image for Protanopia</h4>
+        		<p> This image simulates the image in the eye of protanopia. That is, the impact of this image to a trichromatic observer is the same as the original image to a protanopic observer</p>
+		    </div>
+    		  </div>
+  	        </div>
+		
+		<div class="col-xs-6 col-md-3">
+    		<div class="thumbnail">
+      		  <img src="images/300x200.svg" alt="300x200" style="width: 300px; height: 200px;">
+      		  <div class="caption">
+		  	<h4>Image for Deutanopia</h4>
+        		<p> This image simulates the image in the eye of deutanopia. That is, the impact of this image to a trichromatic observer is the same as the original image to a deutanopic observer</p>
+		  </div>
+    		</div>
+  	        </div>
+				
+		<div class="col-xs-6 col-md-3">
+    		<div class="thumbnail">
+      		  <img src="images/300x200.svg" alt="300x200" style="width: 300px; height: 200px;">
+      		  <div class="caption">
+		  	<h4>Image for Tritanopia</h4>
+        		<p>This image simulates the image in the eye of tritanopia. That is, the impact of this image to a trichromatic observer is the same as the original image to a tritanopic observer</p>
+		  </div>
+    		</div>
+  	        </div>	         
+            </div>
+          </div>
+        </div>
+        
+        <div class="panel"></div>
+        </fieldset>
+
     </form>
   </div>
 </div>
 
+ <!-- Footer -->
+ <footer class="bs-docs-footer" role="contentinfo">
+      <div class="container">
+	<p> Designed and built by 
+	<a href="http://www.stanford.edu/~hjiang36" target="_blank">@HJ</a> /
+	<a href="http://www.stanford.edu/group/vista/cgi-bin/wandell/" target="_blank">@BW</a> /
+	<a href="http://scien.stanford.edu/jfsite/Biography.htm" target="_blank">@JEF</a>, ISETBIO Team, Stanford </p>
+	<p> Code and Tools licensed under 
+	<a href="https://github.com/twbs/bootstrap/blob/master/LICENSE" target="_blank"> MIT </a>
+	<p> For more information, contact hjiang36@stanford.edu </p>
+	<ul class="bs-docs-footer-links muted">
+	  <li>Currently v0.0.1</li>
+	  <li>·</li>
+	  <li><a href="https://github.com/hjiang36/D-CIELAB">GitHub</a></li>
+	  <li>·</li>
+	  <li><a href="https://github.com/isetbio/isetbio">ISETBIO</a></li>
+	  <li>·</li>
+	  <li><a href="http://scien.stanford.edu/">SCIEN</a></li>
+	  <li>·</li>
+	  <li><a href="http://www.stanford.edu">Stanford University</a></li>
+	</ul>
+      </div>
+</footer>
+
 
 <script type="text/javascript">
-function clearColorInputs(){
-	$("#Original-Color-1").val("");
-	$("#Original-Color-2").val("");
-	$("#Original-Color-3").val("");
-	$("#Transformed-Color-1").val("");
-	$("#Transformed-Color-2").val("");
-	$("#Transformed-Color-3").val("");
+function toLMS(c, colorSpace) {
+	var XYZ, LMS;
+	switch (colorSpace){
+	case "sRGB":
+		XYZ = srgb2xyz(c);
+		LMS = xyz2lms(XYZ);
+		break;
+	case "XYZ":
+		LMS = xyz2lms(c);
+		break;
+	case "LMS":
+		LMS = c;
+		break;
+	case "xyY":
+		XYZ = xyy2xyz(c);
+		LMS = xyz2lms(XYZ);
+	}
+	return LMS;
 
 }
 
-function getInputXYZ(){
+function dColorTransInputGet(){
 	var colorSpace = $("#colorSpace").val();
-	var c1 = $("#Original-Color-1").val();
-	var c2 = $("#Original-Color-2").val();
-	var c3 = $("#Original-Color-3").val();
-	if ($.isNumeric(c1) && $.isNumeric(c2) && $.isNumeric(c3)){
-	  var c = $.colorspaces.make_color("sRGB", [c1, c2, c3]);
-	  return c.as("CIEXYZ");
+	var c = new Array(3);
+	var XYZ, LMS;
+	
+	c[0] = $("#Original-Color-1").val();
+	c[1] = $("#Original-Color-2").val();
+	c[2] = $("#Original-Color-3").val();
+	
+	if (!$.isNumeric(c[0]) || !$.isNumeric(c[1]) || !$.isNumeric(c[2])){
+	  return null;
 	}
-	else{
-	  return [NaN, NaN, NaN];
-	}
+	return toLMS(c, colorSpace);
 }
 
-$("#colorSpace").change(function (){
-	clearColorInputs();
+function dCIELABGetInput(){
+	var colorSpace = $("#cSpace").val();
+	var c1 = new Array(3);
+	var c2 = new Array(3);
+	var c3 = new Array(3);
+
+	for (ii = 0; ii < 3; ii++) {
+		c1[ii] = $("#ColorA-"+(ii+1)).val();
+		c2[ii] = $("#ColorB-"+(ii+1)).val();
+		c3[ii] = $("#ColorW-"+(ii+1)).val();
+		if (!$.isNumeric(c1[ii]) || !$.isNumeric(c2[ii]) || !$.isNumeric(c3[ii])) {
+			return null;
+		}
+	}
+	return [toLMS(c1, colorSpace), toLMS(c2, colorSpace), toLMS(c3, "XYZ")];
+}
+
+$("#colorSpace").change(function () {
+	// clear color inputs
+	$("input[id|='Original-Color'").val("");
+	$("input[id|='Transformed-Color'").val("");
+
 	var indx = document.getElementById("colorSpace").selectedIndex;
-	switch (indx){
-	  case 1:
+	switch (indx) {
+	  case 1: // XYZ
 		$("#Original-Color-1").attr("placeholder", "X");
 		$("#Original-Color-2").attr("placeholder", "Y");
 		$("#Original-Color-3").attr("placeholder", "Z");
 		break;
-	  case 2:
+	  case 2: // xyY
 		$("#Original-Color-1").attr("placeholder", "x");
 		$("#Original-Color-2").attr("placeholder", "y");
 		$("#Original-Color-3").attr("placeholder", "Y");
 		break;
-	  case 3:
+	  case 3: // LMS
 		$("#Original-Color-1").attr("placeholder", "L");
 		$("#Original-Color-2").attr("placeholder", "M");
 		$("#Original-Color-3").attr("placeholder", "S");
 		break;
-	  default:
+	  default: // sRGB
 		$("#Original-Color-1").attr("placeholder", "R");
 		$("#Original-Color-2").attr("placeholder", "G");
 		$("#Original-Color-3").attr("placeholder", "B");
@@ -153,19 +373,101 @@ $("#colorSpace").change(function (){
 	}
 });
 
-$("#Original-Color-1, #Original-Color-2, #Original-Color-3").change(function (){
-	var XYZ = getInputXYZ();
-	if (!isNaN(XYZ[0]) && !isNaN(XYZ[1]) && !isNaN(XYZ[2])){
-		$("#Transformed-Color-1").val(XYZ[0]);
-		$("#Transformed-Color-2").val(XYZ[1]);
-		$("#Transformed-Color-3").val(XYZ[2]);	
-	}
-	else{
-		$("#Transformed-Color-1").val("");
-		$("#Transformed-Color-2").val("");
-		$("#Transformed-Color-3").val("");	
+$("#cSpace").change(function (){
+	// clear color inputs
+	$("input[id|='ColorA']").val("");
+	$("input[id|='ColorB']").val("");
+	$("input[id|='ColorW']").val("");
+
+	var indx = document.getElementById("cSpace").selectedIndex;
+	switch (indx) {
+	  case 1: // XYZ
+		$("#ColorA-1").attr("placeholder", "X");
+		$("#ColorA-2").attr("placeholder", "Y");
+		$("#ColorA-3").attr("placeholder", "Z");
+		$("#ColorB-1").attr("placeholder", "X");
+		$("#ColorB-2").attr("placeholder", "Y");
+		$("#ColorB-3").attr("placeholder", "Z");
+
+		break;
+	  case 2: // xyY
+		$("#ColorA-1").attr("placeholder", "x");
+		$("#ColorA-2").attr("placeholder", "y");
+		$("#ColorA-3").attr("placeholder", "Y");
+		$("#ColorB-1").attr("placeholder", "x");
+		$("#ColorB-2").attr("placeholder", "y");
+		$("#ColorB-3").attr("placeholder", "Y");
+		break;
+	  case 3: // LMS
+		$("#ColorA-1").attr("placeholder", "L");
+		$("#ColorA-2").attr("placeholder", "M");
+		$("#ColorA-3").attr("placeholder", "S");
+		$("#ColorB-1").attr("placeholder", "L");
+		$("#ColorB-2").attr("placeholder", "M");
+		$("#ColorB-3").attr("placeholder", "S");
+		break;
+	  default: // sRGB
+		$("#ColorA-1").attr("placeholder", "R");
+		$("#ColorA-2").attr("placeholder", "G");
+		$("#ColorA-3").attr("placeholder", "B");
+		$("#ColorB-1").attr("placeholder", "R");
+		$("#ColorB-2").attr("placeholder", "G");
+		$("#ColorB-3").attr("placeholder", "B");
+		break;
 	}
 });
+
+$("input[id^='Original-Color'], #cbType").change(function (){
+	var LMS = dColorTransInputGet();
+	var cbType = document.getElementById("cbType").selectedIndex;
+	if (LMS != null) {
+		var cbLMS = brettelTransform(LMS, cbType);
+		var colorSpace = $("#colorSpace").val();
+		var c;
+		switch (colorSpace) {
+			case "sRGB":
+				c = xyz2srgb(lms2xyz(cbLMS));
+				break;
+			case "XYZ":
+				c = lms2xyz(cbLMS);
+				break;
+			case "LMS":
+				c = cbLMS;
+			case "xyY":
+				c = xyz2xyy(lms2xyz(cbLMS));
+		}
+		$("#Transformed-Color-1").val(parseFloat(c[0]).toFixed(6));
+		$("#Transformed-Color-2").val(parseFloat(c[1]).toFixed(6));
+		$("#Transformed-Color-3").val(parseFloat(c[2]).toFixed(6));	
+	}
+	else {
+		$("input[id|='Transformed-Color']").val("");
+	}
+});
+
+$("input[id^='Color'], #d-cbType").change(function(){
+	var LMS = dCIELABGetInput();
+	var cbType = document.getElementById("d-cbType").selectedIndex;
+	if (LMS != null) {
+		var XYZ1 = lms2xyz(brettelTransform(LMS[0], cbType));
+		var XYZ2 = lms2xyz(brettelTransform(LMS[1], cbType));
+		var XYZW = lms2xyz(brettelTransform(LMS[2], cbType));
+		var deltaE = deltaEab(XYZ1, XYZ2, XYZW);
+		if (deltaE != null)
+			$("#d-DeltaE").val(parseFloat(deltaE).toFixed(6));
+		else
+			$("#d-DeltaE").val("");
+	}
+	else {
+		$("#d-DeltaE").val("");
+	}
+});
+
+$("#loadImage").click(function() {
+	var srcURL = $("#imageURL").val();
+	$("#originalImage").attr("src", srcURL);
+});
+
 </script>
 </body>
 </html>
