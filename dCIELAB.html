@@ -216,7 +216,7 @@
 	      <div class="row">
   		<div class="col-xs-6 col-md-3">
     		  <div class="thumbnail">
-		    <img src="images/300x200.svg" alt="300x200" id="originalImage" style="width: 300px; height: 200px;">
+		    <img src="images/300x200.svg" alt="300x200" id="originalImage" style="width: 240px; height: 180px;">
 		    <div class="caption">
 		  	<h4>Original Image</h4>
         		<p> This is the trichromatic image. For trichromatic observer, this should be the most colorful one among the four.</p>
@@ -226,7 +226,7 @@
   		
 		<div class="col-xs-6 col-md-3">
     		  <div class="thumbnail">
-      		    <img src="images/300x200.svg" alt="300x200" style="width: 300px; height: 200px;">
+      		    <img src="images/300x200.svg" alt="300x200" id="ProtanImage" style="width: 240px; height: 180px;">
       		    <div class="caption">
 		  	<h4>Image for Protanopia</h4>
         		<p> This image simulates the image in the eye of protanopia. That is, the impact of this image to a trichromatic observer is the same as the original image to a protanopic observer</p>
@@ -236,7 +236,7 @@
 		
 		<div class="col-xs-6 col-md-3">
     		<div class="thumbnail">
-      		  <img src="images/300x200.svg" alt="300x200" style="width: 300px; height: 200px;">
+      		  <img src="images/300x200.svg" alt="300x200" id="DeutanImage" style="width: 240px; height: 180px;">
       		  <div class="caption">
 		  	<h4>Image for Deutanopia</h4>
         		<p> This image simulates the image in the eye of deutanopia. That is, the impact of this image to a trichromatic observer is the same as the original image to a deutanopic observer</p>
@@ -246,7 +246,7 @@
 				
 		<div class="col-xs-6 col-md-3">
     		<div class="thumbnail">
-      		  <img src="images/300x200.svg" alt="300x200" style="width: 300px; height: 200px;">
+      		  <img src="images/300x200.svg" alt="300x200" id="TritanImage" style="width: 240px; height: 180px;">
       		  <div class="caption">
 		  	<h4>Image for Tritanopia</h4>
         		<p>This image simulates the image in the eye of tritanopia. That is, the impact of this image to a trichromatic observer is the same as the original image to a tritanopic observer</p>
@@ -463,9 +463,63 @@ $("input[id^='Color'], #d-cbType").change(function(){
 	}
 });
 
+Caman.Filter.register("dichromat", function (adjust) {
+	this.process("dichromat", function(rgba) {
+		// srgb -> xyz -> lms
+		var srgb = [rgba.r, rgba.g, rgba.b];
+		var xyz  = srgb2xyz(srgb);
+		var lms  = xyz2lms(xyz);
+
+		// brettel transform
+		var cbLMS = brettelTransform(lms, adjust);
+		
+		// back to srgb
+		var cbRGB = xyz2srgb(lms2xyz(cbLMS));
+		rgba.r = cbRGB[0];
+		rgba.g = cbRGB[1];
+		rgba.b = cbRGB[2];
+		return rgba;
+	});
+});
+
 $("#loadImage").click(function() {
 	var srcURL = $("#imageURL").val();
 	$("#originalImage").attr("src", srcURL);
+	$("#ProtanImage").attr("src", srcURL);
+	$("#DeutanImage").attr("src", srcURL);
+	$("#TritanImage").attr("src", srcURL);
+	Caman("#originalImage", function() {
+		this.resize({
+			width:  240,
+			height: 180
+		}).render();
+	});
+	Caman("#ProtanImage", function() {
+		this.resize({
+			width:  240,
+			height: 180
+		}).render();
+		this.dichromat(1);
+		this.render();
+	});
+	Caman("#DeutanImage", function() {
+		this.resize({
+			width:  240,
+			height: 180
+		}).render();
+		this.dichromat(2);
+		this.render();
+	});
+	Caman("#TritanImage", function() {
+		this.resize({
+			width:  240,
+			height: 180
+		}).render();
+		this.dichromat(3);
+		this.render();
+	});
+
+
 });
 
 </script>
