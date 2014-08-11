@@ -1,0 +1,269 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>v_fred_rieke</title><meta name="generator" content="MATLAB 8.2"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-08-10"><meta name="DC.source" content="v_fred_rieke.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>v_fred_rieke</h1><!--introduction--><pre>  Compare cone isomerization results between ISETBIO and Rieke's paper</pre><pre>Reference:
+  Charles A Hass, et. al, Chromatic detection from cone photoreceptors
+  to V1 neurons to behavior in rhesus monkeys</pre><pre>(HJ) ISETBIO TEAM, 2014</pre><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">General scene parameters</a></li><li><a href="#3">Not needed at this point</a></li><li><a href="#4">Make a scene without knowledge of the display characteristics</a></li><li><a href="#5">Show the simulated image</a></li><li><a href="#6">Create human optics</a></li><li><a href="#7">Show the irradiance</a></li><li><a href="#8">Create sensor</a></li><li><a href="#9">Compute cone absorptions</a></li><li><a href="#10">Cone as sensor</a></li><li><a href="#11">Put up horizontal plot through mosaic of the three types</a></li><li><a href="#12">End</a></li></ul></div><pre class="codeinput">s_initISET
+</pre><h2>General scene parameters<a name="2"></a></h2><pre class="codeinput">wave = (400:10:700)';
+fov  = 1;
+d = displayCreate(<span class="string">'OLED-Sony'</span>, wave);
+</pre><pre class="codeoutput">Changing wave and interpolating SPD also, for consistency
+</pre><h2>Not needed at this point<a name="3"></a></h2><pre class="codeinput"><span class="comment">% spd = displayGet(d,'spd');</span>
+<span class="comment">% vcNewGraphWin;</span>
+<span class="comment">% plot(wave,spd);</span>
+<span class="comment">% xlabel('Wave (nm)'); ylabel('Spectral radiance (watts/sr/s/nm/m^2)');</span>
+</pre><h2>Make a scene without knowledge of the display characteristics<a name="4"></a></h2><pre class="codeinput"><span class="comment">% The mean luminance of the screen is set to 100 cd/m2.</span>
+p.freq = 4;
+p.contrast = 1;
+p.ph  = 0;
+p.ang = 0;
+p.row = 128;
+p.col = 128;
+p.GaborFlag =  .2;
+scene = sceneCreate(<span class="string">'harmonic'</span>,p);
+scene = sceneSet(scene, <span class="string">'h fov'</span>, fov);
+
+<span class="comment">% Make the SPD like one of our displays</span>
+scene = sceneAdjustIlluminant(scene,sum(displayGet(d,<span class="string">'spd primaries'</span>),2));
+</pre><h2>Show the simulated image<a name="5"></a></h2><pre class="codeinput">vcAddObject(scene); sceneWindow;
+mid = round(sceneGet(scene,<span class="string">'row'</span>)/2);
+plotScene(scene,<span class="string">'radiance hline'</span>,[1, mid]);
+</pre><img vspace="5" hspace="5" src="v_fred_rieke_01.png" alt=""> <img vspace="5" hspace="5" src="v_fred_rieke_02.png" alt=""> <h2>Create human optics<a name="6"></a></h2><pre class="codeinput"><span class="comment">%  According to the paper, pupil size should be of area 12.6 mm^2 (4 mm</span>
+<span class="comment">%  pupil diameter)</span>
+pupil_size = 4; <span class="comment">% 4 mm diameter</span>
+oi = oiCreate(<span class="string">'wvf human'</span>, pupil_size);
+oi = oiCompute(scene, oi);
+vcAddObject(oi); oiWindow;
+</pre><img vspace="5" hspace="5" src="v_fred_rieke_03.png" alt=""> <h2>Show the irradiance<a name="7"></a></h2><pre class="codeinput">mid = round(oiGet(oi,<span class="string">'row'</span>)/2);
+plotOI(oi,<span class="string">'irradiance hline'</span>,[1, mid]);
+az = -13.5; el = 14; view([az el]);
+</pre><img vspace="5" hspace="5" src="v_fred_rieke_04.png" alt=""> <h2>Create sensor<a name="8"></a></h2><p>According to the paper, cone collecting area is 0.6 um^2  macular pigment transmittancewas scaled to 0.35 at 460 nm  lens transmittancewas scaled to 1 at 400 nm</p><pre class="codeinput">sensor = sensorCreate(<span class="string">'human'</span>);
+sensor = sensorSet(sensor, <span class="string">'wave'</span>, wave);
+
+pixel = pixelCreate(<span class="string">'human'</span>, wave);
+pixel = pixelSet(pixel, <span class="string">'pd width'</span>, 0.774e-6); <span class="comment">% photo-detector width</span>
+pixel = pixelSet(pixel, <span class="string">'pd height'</span>, 0.774e-6);
+sensor = sensorSet(sensor, <span class="string">'pixel'</span>, pixel);
+
+<span class="comment">% lens transmittance was scaled to 1 at 400 nm</span>
+<span class="comment">% THIS PART IS NOT RIGHT AT THIS POINT...NOW IT'S TO EQUIVALENT TO IGNORE</span>
+<span class="comment">% THE LENS EFFECT...</span>
+lens = sensorGet(sensor, <span class="string">'human lens'</span>);
+lens_trans = lensGet(lens, <span class="string">'transmittance'</span>);
+unit_density = lensGet(lens, <span class="string">'unit density'</span>);
+scale_factor = log10(lens_trans(wave==400))/unit_density(wave==400);
+lens_density = lensGet(lens, <span class="string">'density'</span>);
+lens = lensSet(lens, <span class="string">'density'</span>, lens_density + scale_factor);
+sensor = sensorSet(sensor, <span class="string">'human lens'</span>, lens);
+
+<span class="comment">% macular pigment absorbance was scaled to 0.35 at 460 nm</span>
+macular = sensorGet(sensor, <span class="string">'human macular'</span>);
+macular = macularSet(macular, <span class="string">'density'</span>, 0.35);
+macular = macularSet(macular, <span class="string">'density'</span>, 0);
+sensor = sensorSet(sensor, <span class="string">'human macular'</span>, macular);
+</pre><h2>Compute cone absorptions<a name="9"></a></h2><pre class="codeinput">sensor = sensorSetSizeToFOV(sensor, fov, scene, oi);
+sensor = sensorSet(sensor, <span class="string">'exp time'</span>, 1);
+sensor = sensorComputeNoiseFree(sensor, oi);
+
+photons = sensorGet(sensor, <span class="string">'photons'</span>);
+coneType = sensorGet(sensor, <span class="string">'cone type'</span>);
+
+coneNames = {<span class="string">'L'</span>, <span class="string">'M'</span>, <span class="string">'S'</span>};
+<span class="keyword">for</span> ii = 2 : 4
+    fprintf(<span class="string">'photoisomerization %s: %d R/sec\n'</span>, coneNames{ii-1}, <span class="keyword">...</span>
+            median(photons(coneType==ii)));
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">photoisomerization L: 3355 R/sec
+photoisomerization M: 2969 R/sec
+photoisomerization S: 888 R/sec
+</pre><h2>Cone as sensor<a name="10"></a></h2><pre class="codeinput">vcAddObject(sensor);
+sensorWindow(<span class="string">'scale'</span>,1);
+
+<span class="comment">% Could put up the spectral QE to emphasize lack of lens cutoff.</span>
+</pre><img vspace="5" hspace="5" src="v_fred_rieke_05.png" alt=""> <h2>Put up horizontal plot through mosaic of the three types<a name="11"></a></h2><pre class="codeinput">mid = sensorGet(sensor,<span class="string">'row'</span>)/2;
+plotSensor(sensor,<span class="string">'electrons hline'</span>,round([1 mid]));  <span class="comment">% (x,y)</span>
+</pre><img vspace="5" hspace="5" src="v_fred_rieke_06.png" alt=""> <h2>End<a name="12"></a></h2><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2013b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% v_fred_rieke
+%
+%    Compare cone isomerization results between ISETBIO and Rieke's paper
+%
+%  Reference:
+%    Charles A Hass, et. al, Chromatic detection from cone photoreceptors
+%    to V1 neurons to behavior in rhesus monkeys
+%
+%  (HJ) ISETBIO TEAM, 2014
+
+%%
+s_initISET
+
+%% General scene parameters
+
+wave = (400:10:700)';
+fov  = 1;
+d = displayCreate('OLED-Sony', wave);
+
+%% Not needed at this point
+
+% spd = displayGet(d,'spd');
+% vcNewGraphWin;
+% plot(wave,spd);
+% xlabel('Wave (nm)'); ylabel('Spectral radiance (watts/sr/s/nm/m^2)');
+
+%% Make a scene without knowledge of the display characteristics
+
+% The mean luminance of the screen is set to 100 cd/m2. 
+p.freq = 4;
+p.contrast = 1;
+p.ph  = 0;
+p.ang = 0;
+p.row = 128;
+p.col = 128;
+p.GaborFlag =  .2;
+scene = sceneCreate('harmonic',p);
+scene = sceneSet(scene, 'h fov', fov);
+
+% Make the SPD like one of our displays
+scene = sceneAdjustIlluminant(scene,sum(displayGet(d,'spd primaries'),2));
+
+%%  Show the simulated image
+vcAddObject(scene); sceneWindow;
+mid = round(sceneGet(scene,'row')/2);
+plotScene(scene,'radiance hline',[1, mid]);
+
+%% Create human optics
+
+%  According to the paper, pupil size should be of area 12.6 mm^2 (4 mm
+%  pupil diameter)
+pupil_size = 4; % 4 mm diameter
+oi = oiCreate('wvf human', pupil_size);
+oi = oiCompute(scene, oi);
+vcAddObject(oi); oiWindow;
+
+%% Show the irradiance
+mid = round(oiGet(oi,'row')/2);
+plotOI(oi,'irradiance hline',[1, mid]);
+az = -13.5; el = 14; view([az el]);
+
+%% Create sensor
+% According to the paper, cone collecting area is 0.6 um^2
+%  macular pigment transmittancewas scaled to 0.35 at 460 nm
+%  lens transmittancewas scaled to 1 at 400 nm
+sensor = sensorCreate('human');
+sensor = sensorSet(sensor, 'wave', wave);
+
+pixel = pixelCreate('human', wave);
+pixel = pixelSet(pixel, 'pd width', 0.774e-6); % photo-detector width
+pixel = pixelSet(pixel, 'pd height', 0.774e-6);
+sensor = sensorSet(sensor, 'pixel', pixel);
+
+% lens transmittance was scaled to 1 at 400 nm
+% THIS PART IS NOT RIGHT AT THIS POINT...NOW IT'S TO EQUIVALENT TO IGNORE
+% THE LENS EFFECT...
+lens = sensorGet(sensor, 'human lens');
+lens_trans = lensGet(lens, 'transmittance');
+unit_density = lensGet(lens, 'unit density');
+scale_factor = log10(lens_trans(wave==400))/unit_density(wave==400);
+lens_density = lensGet(lens, 'density');
+lens = lensSet(lens, 'density', lens_density + scale_factor);
+sensor = sensorSet(sensor, 'human lens', lens);
+
+% macular pigment absorbance was scaled to 0.35 at 460 nm
+macular = sensorGet(sensor, 'human macular');
+macular = macularSet(macular, 'density', 0.35);
+macular = macularSet(macular, 'density', 0);
+sensor = sensorSet(sensor, 'human macular', macular);
+
+%% Compute cone absorptions
+sensor = sensorSetSizeToFOV(sensor, fov, scene, oi);
+sensor = sensorSet(sensor, 'exp time', 1);
+sensor = sensorComputeNoiseFree(sensor, oi);
+
+photons = sensorGet(sensor, 'photons');
+coneType = sensorGet(sensor, 'cone type');
+
+coneNames = {'L', 'M', 'S'};
+for ii = 2 : 4
+    fprintf('photoisomerization %s: %d R/sec\n', coneNames{ii-1}, ...
+            median(photons(coneType==ii)));
+end
+
+%% Cone as sensor
+vcAddObject(sensor);
+sensorWindow('scale',1);
+
+% Could put up the spectral QE to emphasize lack of lens cutoff.
+
+%% Put up horizontal plot through mosaic of the three types
+mid = sensorGet(sensor,'row')/2;
+plotSensor(sensor,'electrons hline',round([1 mid]));  % (x,y)
+
+%% End
+
+
+##### SOURCE END #####
+--></body></html>
